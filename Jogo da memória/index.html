@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html >
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            align-items: flex-start;
+            padding-bottom: 50px; 
+        }
+
+        .box {
+            width: calc(25% - 20px);
+            height: 30vh;
+            margin: 5px;
+            
+            position: relative;
+        }
+
+        .box-inner {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            backface-visibility: hidden;
+            perspective: 1000px;
+            transform-style: preserve-3d;
+            transition: transform 1s;
+            cursor: pointer;
+            
+        }
+
+        .box .front {
+            background-color: #3498db;
+            color: #fff;
+            transform: rotateY(0deg);
+        }
+
+        .box.flipped .front {
+            transform: rotateY(180deg);
+        }
+
+        .box .back {
+            background-color: #e74c3c;
+            color: #fff;
+            transform: rotateY(-180deg);
+        }
+
+        .box.flipped .back {
+            transform: rotateY(0deg);
+        }
+
+        .box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        #flipAllButton {
+            margin: 10px;
+            padding: 10px;
+            background-color: #2ecc71;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            position: absolute;
+            //bottom: 20px;
+            left: 46%;
+            top: 68vh;
+        }
+
+        @media (max-width: 600px) {
+            .box {
+                width: calc(50% - 20px);
+                height: 18vh;
+            }
+           #flipAllButton {
+            margin: 10px;
+            padding: 10px;
+            background-color: #2ecc71;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            position: absolute;
+            //bottom:80px;
+            left: 35%;
+            top: 80vh;
+        }  
+            
+        }
+    </style>
+</head>
+<body>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Array com os números de 1 a 8
+            var numbers = [1, 2, 3, 4, 5, 6, 7, 8];
+
+            // Função para embaralhar o array
+            function shuffleArray(array) {
+                for (var i = array.length - 1; i > 0; i--) {
+                    var j = Math.floor(Math.random() * (i + 1));
+                    var temp = array[i];
+                    array[i] = array[j];
+                    array[j] = temp;
+                }
+                
+                
+            }
+
+            // Embaralhar os números
+            shuffleArray(numbers);
+
+            // Array com os caminhos das imagens de animais
+            var animalImages = [
+                'https://static.wixstatic.com/media/094886_be869539ee4c48adbb11afa0eb9aef42~mv2.jpeg',
+                'https://static.wixstatic.com/media/094886_6af43ea203a642168920fcc411f6c1a7~mv2.jpeg',
+                'https://static.wixstatic.com/media/094886_c61fa21ac7d54cff8904654e57a617b1~mv2.jpeg',
+                'https://static.wixstatic.com/media/094886_33b8f5b2b29e4fd483dd54fce50d7596~mv2.jpeg',
+                'https://static.wixstatic.com/media/094886_8768b3fd4dbd4acf9444c8fb70ce20de~mv2.jpeg',
+                'https://static.wixstatic.com/media/094886_1290301b484641ff91b1fca3124a7cc1~mv2.jpeg',
+                'https://static.wixstatic.com/media/094886_3b593b8fcb3b4091a06259a8baf14703~mv2.jpeg',
+                'https://static.wixstatic.com/media/094886_50becd96032c429ab8c5a6b8bf43171f~mv2.jpeg'
+            ];
+            
+             var animalAudios = [
+                'https://static.wixstatic.com/mp3/094886_ae5fc3c831ad4ac8ab1797e04963f91a.mp3',
+                'https://static.wixstatic.com/mp3/094886_c9dd51b745ad4300b6c26b6da2e8b5b0.mp3',
+                'https://static.wixstatic.com/mp3/094886_541b0a14e77146c7a684629cdbc7a558.mp3',
+                'https://static.wixstatic.com/mp3/094886_bacc8eddeaed4b6b90d0249583e1b3d9.mp3',
+                'https://static.wixstatic.com/mp3/094886_9c71b9534a9b4954abd6676a487f5e83.mp3',
+                'https://static.wixstatic.com/mp3/094886_69f45c8068f9496abea2002d14d806db.mp3',
+                'https://static.wixstatic.com/mp3/094886_5549219ad3194443b047c6c8d01188dd.mp3',
+                'https://static.wixstatic.com/mp3/094886_1502aadfca3047f791ece73f22d41b94.mp3'
+            ];
+            
+            var pAnimalAudios = [
+                'https://static.wixstatic.com/mp3/094886_69e9619c096c4caea6ec2e9fa2a5e231.mp3',
+                'https://static.wixstatic.com/mp3/094886_3fb8b3bff08b463ea874c4d25e60ac31.mp3',
+                'https://static.wixstatic.com/mp3/094886_6db7dbcc8c4d4306bd52c3170c6f382d.mp3',
+                'https://static.wixstatic.com/mp3/094886_2a2e581474c740378406613d8a5bbd5a.mp3',
+                'https://static.wixstatic.com/mp3/094886_3a0a2d1e69a6411fa5ef603dbfe6d484.mp3',
+                'https://static.wixstatic.com/mp3/094886_d7cd481e72ca43738e95bef9a32f6fd2.mp3',
+                'https://static.wixstatic.com/mp3/094886_dccee1640bab455e9786592804c265a6.mp3',
+                'https://static.wixstatic.com/mp3/094886_f28cc373db514a2bb5f717bd2b8ad7e5.mp3'
+            ];
+            
+            var retornoAudios = [
+            'https://static.wixstatic.com/mp3/094886_7c7bd0a734cd4b3b9366582d44f1d384.mp3',
+            'https://static.wixstatic.com/mp3/094886_05703898c8a640f682f0042e0841fdf6.mp3'    
+                
+            ];
+
+            // Adicionar as divs ao corpo da página
+            
+            for (var i = 0; i < numbers.length; i++) {
+                var container = document.createElement('div');
+                container.className = 'box';
+
+                var front = document.createElement('div');
+                front.className = 'box-inner front';
+                front.innerHTML =  '<img src="' + animalImages[numbers[i] - 1] + '" alt="Animal Back" />';
+                front.dataset.audio = animalAudios[numbers[i] - 1];
+                
+                var back = document.createElement('div');
+                back.className = 'box-inner back'; 
+                back.innerHTML = '<img src="https://static.wixstatic.com/media/094886_9b3780f996a947489b20d7ac33e5d5a3~mv2.png" alt="Card Front" />';
+                
+                
+                container.appendChild(front);
+                container.appendChild(back);
+
+                container.addEventListener('click', cList);
+                 
+                
+
+                document.body.appendChild(container);
+            }
+              var audioReproduzindo=false;
+              var audio='';
+              var s = Math.floor(Math.random() * 8);
+              animal = this.querySelector('.front').dataset.audio; 
+              animalClicado = '';
+            
+            
+            
+            var  listaClasse = '';
+            
+            function cList(){
+            listaClasse = this.classList; 
+             
+             audio = new Audio(this.querySelector('.front').dataset.audio); 
+              
+             animal = this.querySelector('.front').dataset.audio; 
+                
+             if (!audioReproduzindo) {
+                  
+                  flipCard();
+                  }
+            }
+            
+              // Função para virar a carta
+            function flipCard() {
+                
+                
+                if ( listaClasse == "box"  ){
+                 audioReproduzindo = true;
+                 
+                 audio.play();
+                   
+                document.querySelector('.box').style.pointerEvents = 'none';   
+             
+                audio.onended = function() {
+                   
+                document.querySelector('.box').style.pointerEvents = 'auto';
+                audioReproduzindo = false;
+            
+                }  
+                         
+                } else {
+                audioReproduzindo = true; 
+                    
+                listaClasse.toggle('flipped'); 
+                retorno(); 
+                    
+                  
+                    
+                    
+                    
+                    
+                    }
+                  }
+           
+            
+            
+            function retorno(){
+                            
+            if (animal == animalClicado){
+             var audio2 = new Audio(retornoAudios[0]); 
+             audio2.play();
+             
+            audio2.onended = function() {
+                   
+                document.querySelector('.box.flipped').style.pointerEvents = 'auto';
+                audioReproduzindo = false;
+            
+                };    
+                
+            } else{
+            var audio3 = new Audio(retornoAudios[1]); 
+             audio3.play() 
+             
+            audio3.onended = function() {
+                   
+                document.querySelector('.box.flipped').style.pointerEvents = 'auto';
+                audioReproduzindo = false;
+            
+                };    
+                
+                
+             }
+           }
+            
+            
+             inicio = 0;
+            // Função para virar todas as cartas
+            document.getElementById('flipAllButton').addEventListener('click', virar) 
+                
+        function virar()  {
+          
+         if (inicio == 0){
+          virarTodas(); 
+          inicio = 1  ;   
+            
+         }  else{
+             desvirarTodas();
+          inicio = 0  ;   
+         } 
+            
+        }
+        
+        
+            
+        function virarTodas(){
+         if (s == 0){
+                animalClicado = 'https://static.wixstatic.com/mp3/094886_ae5fc3c831ad4ac8ab1797e04963f91a.mp3';   
+                }       
+         if (s == 1){
+                animalClicado = 'https://static.wixstatic.com/mp3/094886_c9dd51b745ad4300b6c26b6da2e8b5b0.mp3';    
+                }
+            
+         if (s == 2){
+                animalClicado = 'https://static.wixstatic.com/mp3/094886_541b0a14e77146c7a684629cdbc7a558.mp3'; 
+                }       
+         if (s == 3){
+                 animalClicado = 'https://static.wixstatic.com/mp3/094886_bacc8eddeaed4b6b90d0249583e1b3d9.mp3';   
+                } 
+            
+         if (s == 4){
+                animalClicado = 'https://static.wixstatic.com/mp3/094886_9c71b9534a9b4954abd6676a487f5e83.mp3';   
+                }       
+         if (s == 5){
+                animalClicado = 'https://static.wixstatic.com/mp3/094886_69f45c8068f9496abea2002d14d806db.mp3';    
+                }
+            
+         if (s == 6){
+                animalClicado = 'https://static.wixstatic.com/mp3/094886_5549219ad3194443b047c6c8d01188dd.mp3'; 
+                }       
+         if (s == 7){
+                 animalClicado = 'https://static.wixstatic.com/mp3/094886_1502aadfca3047f791ece73f22d41b94.mp3';   
+                }   
+            //alert(animal);   
+            
+                var audio1 = new Audio(pAnimalAudios[s]);
+                var cards = document.querySelectorAll('.box');
+                cards.forEach(function (card) {
+                card.classList.add('flipped');
+                });
+                 //alert(numbers);
+                 audio1.play(); 
+                 //alert(animalClicado);
+                 
+            
+                }
+                
+         function desvirarTodas(){
+                location.reload();
+            }   
+        });
+        
+        
+      </script>
+    
+    <button id="flipAllButton">Virar Todas</button>
+  
+    
+    
+</body>
+</html>
